@@ -1,7 +1,7 @@
 import { UserModel } from "../models";
 import logger from "../config/logger.js";
 
-const createUser = async (userData) => {
+export const createUser = async (userData) => {
   try {
     const user = await UserModel.create(userData);
     return user;

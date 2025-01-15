@@ -16,9 +16,16 @@ const responseMessages = {
       message: "Registration failed please try again",
       statusCode: 400,
     },
-
+    USER_EXISTS:{
+      message: "User already exists",
+      statusCode: 409,
+    },
+    LOGIN_FAILED:{
+      message: "Invalid credentials",
+      statusCode: 400,
+    },
     USER_NOT_FOUND: {
-      message: "User not found",
+      message: "User not found please register",
       statusCode: 404,
     },
     AUTHENTICATION_FAILED: {

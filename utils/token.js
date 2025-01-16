@@ -16,7 +16,7 @@ export const generateToken = (user) => {
   return token;
 };
 
-// Verify the token
+
 
 export const verifyToken = (token) => {
   try {

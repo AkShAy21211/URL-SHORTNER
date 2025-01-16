@@ -12,7 +12,9 @@ export const createUser = async (userData) => {
 
 export const findUserByGoogleId = async (googleId) => {
   try {
-    const user = await UserModel.findOne({ googleId: googleId });
+    
+    const user = await UserModel.findOne({ googleId });
+    
     return user;
   } catch (error) {
     logger.error("Error finding user", error);

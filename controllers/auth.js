@@ -48,8 +48,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const user = req?.user;
 
-  console.log("loginUser", user);
-  
   if (!user) {
     return res
       .status(responseMessages.error.LOGIN_FAILED.status)

@@ -10,10 +10,8 @@ import "./config/passport.js";
 import session from "express-session";
 import { SECREATS } from "./config/index.js";
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 
 app.use(
   session({
@@ -29,7 +27,9 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/auth", authRoute);
-
+app.use("/", (req,res) => {
+   res.send("API is running....");
+});
 // 404 Handler
 app.use((req, res, next) => {
   next(createError(404));

@@ -34,6 +34,7 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-  auth.findUserByGoogleId(id, (err, user) => done(err, user));
+passport.deserializeUser((user, done) => {
+
+  auth.findUserByGoogleId(user.googleId, (err, user) => done(err, user));
 });

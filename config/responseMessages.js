@@ -9,6 +9,17 @@ const responseMessages = {
       message: "Login successful",
       statusCode: 200,
     },
+
+    URL_SHORTENED: {
+      message: "URL shortened successfully",
+      statusCode: 201,
+    },
+
+    URL_REDIRECTED: {
+      message: "Redirecting to the shortened URL",
+      statusCode: 302,
+    },
+   
   },
 
   error: {
@@ -34,6 +45,25 @@ const responseMessages = {
     },
     SERVER_ERROR: {
       message: "Internal server error",
+      statusCode: 500,
+    },
+
+     URL_NOT_FOUND: {
+      message: "URL not found",
+      statusCode: 404,
+    },
+
+    URL_INVALID: {
+      message: "Invalid URL",
+      statusCode: 400,
+    },
+    URL_EXIST:{
+      message: "URL already exists",
+      statusCode: 409,
+    },
+
+    URL_SHORTEN_FAILED: {
+      message: "Failed to shorten URL",
       statusCode: 500,
     },
   },

@@ -1,3 +1,4 @@
 import UserModel from "./user.js";
+import UrlModel from "./url.js"
 
-export { UserModel };
+export { UserModel , UrlModel } ;

@@ -19,16 +19,16 @@ export const registerUser = async (req, res) => {
       .json({ message: responseMessages.error.USER_EXISTS.message });
   }
 
-  const token = jwt.generateToken({
-    id: user._id,
-    email: user.email,
-  });
-
   const newUser = await auth.createUser({
     email: user.email,
     name: user.name,
     googleId: user.googleId,
     profilePicture: user.profilePicture,
+  });
+
+  const token = jwt.generateToken({
+    _id: newUser._id,
+    email: newUser.email,
   });
 
   if (newUser) {
@@ -63,8 +63,8 @@ export const loginUser = async (req, res) => {
   }
 
   const token = jwt.generateToken({
-    id: user._id,
-    email: user.email,
+    _id: existingUser._id,
+    email: existingUser.email,
   });
 
   return res.status(responseMessages.success.LOGIN_SUCCESS.statusCode).json({

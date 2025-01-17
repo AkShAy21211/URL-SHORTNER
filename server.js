@@ -4,7 +4,7 @@ import dotenv from "dotenv/config";
 import cors from "cors";
 import helmet from "helmet";
 import passport from "passport";
-import { authRoute } from "./routes/index.js";
+import { authRoute, urlRoute } from "./routes/index.js";
 import "./config/db.js";
 import "./config/passport.js";
 import session from "express-session";
@@ -27,8 +27,9 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/auth", authRoute);
-app.use("/", (req,res) => {
-   res.send("API is running....");
+app.use("/api/url", urlRoute);
+app.use("/", (req, res) => {
+  res.send("API is running....");
 });
 // 404 Handler
 app.use((req, res, next) => {

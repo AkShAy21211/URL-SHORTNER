@@ -4,6 +4,8 @@ import { SECREATS } from "../config/index.js";
 // Create a new token
 
 export const generateToken = (user) => {
+
+  
   const token = jwt.sign(
     {
       userId: user._id,

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
+    image: achu2002/url-shortner:latest 
     ports:
       - "3000:3000"
     env_file:

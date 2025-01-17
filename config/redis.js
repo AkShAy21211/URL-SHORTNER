@@ -1,21 +1,21 @@
-import Redis from "ioredis";
 import { SECREATS } from "./index.js";
+import { createClient } from "redis";
+import Redis from "ioredis";
 
-console.log(SECREATS);
 
-
-const redis = new Redis({
-  host: "redis",
-  port: 6379,
+const client = new Redis({
+  host: 'redis',  
+  port: 6379,      
+  password: '',    
+  db: 0            
 });
 
-
-redis.on("connect", () => {
-  console.log("Connected to Redis!");
+client.on('connect', () => {
+  console.log('Connected to Redis');
 });
 
-redis.on("error", (err) => {
-  console.error("Redis error:", err);
+client.on('error', (err) => {
+  console.error('Redis error:', err);
 });
 
-export default redis;
+export default client;

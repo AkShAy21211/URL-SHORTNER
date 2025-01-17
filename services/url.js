@@ -1,5 +1,6 @@
 import { UrlModel, TrackingModel, AnalyticsModel } from "../models/index.js";
 import { logger } from "../config/index.js";
+import mongoose, { Types } from "mongoose";
 
 export const findUrlByOriginalUrl = async (longUrl) => {
   try {
@@ -24,6 +25,15 @@ export const findUrlByCustomAlias = async (customAlias) => {
   try {
     const url = await UrlModel.findOne({ customAlias }).exec();
     return url;
+  } catch (error) {
+    logger.error("Error finding URL by alias", error);
+  }
+};
+
+export const findUrlByTopic = async (topic) => {
+  try {
+    const urls = await UrlModel.find({ topic }).exec();
+    return urls;
   } catch (error) {
     logger.error("Error finding URL by alias", error);
   }
@@ -71,7 +81,7 @@ export const updateAnalyticsBreakdown = async (trackingData) => {
         );
         if (existingOSIndex > -1) {
           osType[existingOSIndex].uniqueClicks++;
-        } 
+        }
 
         // Handle device type tracking
         const existingDeviceIndex = deviceType.findIndex(
@@ -80,7 +90,7 @@ export const updateAnalyticsBreakdown = async (trackingData) => {
         );
         if (existingDeviceIndex > -1) {
           deviceType[existingDeviceIndex].uniqueClicks++;
-        } 
+        }
 
         updateAnalytics.clickByDate = clickByDate;
         updateAnalytics.osType = osType;
@@ -140,22 +150,149 @@ export const updateAnalyticsBreakdown = async (trackingData) => {
   }
 };
 
-export const findUrlAnalytics = async (urlId) => {
+export const findUrlAnalytics = async (customAlias) => {
   try {
-    const url = await AnalyticsModel.findOne(
-      { urlId },
+    const [urlAnalytics] = await UrlModel.aggregate([
+      { $match: { customAlias } },
       {
-        _id:0,
-        totalClicks: 1,
-        uniqueUsers: 1,
-        clickByDate: 1,
-        osType: 1,
-        deviceType: 1,
-      }
-    ).exec();
+        $lookup: {
+          from: "analytics",
+          localField: "_id",
+          foreignField: "urlId",
+          as: "analyticsData",
+        },
+      },
+      { $unwind: { path: "$analyticsData", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          _id: 0,
+          analyticsData: {
+            totalClicks: 1,
+            uniqueUsers: 1,
+            clickByDate: {
+              $slice: ["$analyticsData.clickByDate", -7],
+            },
+            osType: {
+              osName: 1,
+              uniqueClicks: 1,
+              uniqueUsers: 1,
+            },
+            deviceType: {
+              deviceName: 1,
+              uniqueClicks: 1,
+              uniqueUsers: 1,
+            },
+          },
+        },
+      },
+    ]);
 
-    return url;
+    return urlAnalytics;
   } catch (error) {
     logger.error("Error finding URL analytics by alias", error);
   }
+};
+
+export const findUrlAnalyticsByTopic = async (topic) => {
+  try {
+    const [urlAnalytics] = await UrlModel.aggregate([
+      { $match: { topic } },
+
+      {
+        $lookup: {
+          from: "analytics",
+          localField: "_id",
+          foreignField: "urlId",
+          as: "analyticsData",
+        },
+      },
+
+      { $unwind: { path: "$analyticsData", preserveNullAndEmptyArrays: true } },
+
+      {
+        $group: {
+          _id: "$topic",
+          totalClicks: { $sum: "$analyticsData.totalClicks" },
+          uniqueUsers: { $sum: "$analyticsData.uniqueUsers" },
+          clicksByDate: {
+            $push: "$analyticsData.clickByDate",
+          },
+          urls: {
+            $push: {
+              shortUrl: "$shortUrl",
+              totalClicks: "$analyticsData.totalClicks",
+              uniqueUsers: "$analyticsData.uniqueUsers",
+            },
+          },
+        },
+      },
+
+      {
+        $addFields: {
+          clicksByDate: {
+            $reduce: {
+              input: "$clicksByDate",
+              initialValue: [],
+              in: {
+                $concatArrays: ["$$value", "$$this"],
+              },
+            },
+          },
+        },
+      },
+
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+
+    return urlAnalytics;
+  } catch (error) {
+    logger.error("Error finding URL analytics by alias", error);
+  }
+};
+
+export const findOverallAnalytics = async (userId) => {
+
+  const [overallAnalytics] = await UrlModel.aggregate([
+    { $match: { userId: new  Types.ObjectId(userId)} },
+    {
+      $lookup: {
+        from: "analytics",
+        localField: "_id",
+        foreignField: "urlId",
+        as: "analyticsData",
+      },
+    },
+    { $unwind: { path: "$analyticsData", preserveNullAndEmptyArrays: true } },
+    {
+      $group: {
+        _id: null,
+        totalUrls: { $sum: 1 },
+        totalClicks: { $sum: { $ifNull: ["$analyticsData.totalClicks", 0] } },
+        uniqueUsers: { $sum: { $ifNull: ["$analyticsData.uniqueUsers", 0] } },
+        clicksByDate: {
+          $push: {
+            $ifNull: ["$analyticsData.clickByDate", []],
+          },
+        },
+        osType: {
+          $push: {
+            $ifNull: ["$analyticsData.osType", []],
+          },
+        },
+        deviceType: {
+          $push: {
+            $ifNull: ["$analyticsData.deviceType", []],
+          },
+        },
+      },
+    },
+    
+  ]);
+
+  return overallAnalytics;
+  
 };

@@ -9,8 +9,6 @@ export const shortenUrl = async (req, res) => {
   const topic = req.body.topic || "";
   const userId = req.user.userId;
 
-  console.log(req.user);
-
   const validateUrl = /^https?:\/\/.+/.test(longUrl);
 
   if (!longUrl || !validateUrl) {
@@ -25,6 +23,7 @@ export const shortenUrl = async (req, res) => {
     return res.status(responseMessages.error.URL_EXIST.statusCode).json({
       message: responseMessages.error.URL_EXIST.message,
       shortUrl: `${SECREATS.BASE_URL}/api/url/${existingUrl.shortUrl}`,
+      createdAt: existingUrl.createdAt,
     });
   }
 
@@ -41,6 +40,7 @@ export const shortenUrl = async (req, res) => {
     return res.status(responseMessages.success.URL_SHORTENED.statusCode).json({
       message: responseMessages.success.URL_SHORTENED.message,
       shortUrl: `${SECREATS.BASE_URL}/api/url/${shortUrl}`,
+      createdAt: newUrl.createdAt,
     });
   }
 

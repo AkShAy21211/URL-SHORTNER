@@ -10,6 +10,7 @@ const SECREATS = {
   MONGO_URL: process.env.MONGO_URL,
   BASE_URL: process.env.BASE_URL,
   IP_ADDRESS: process.env.IP_ADDRESS,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 export default SECREATS;

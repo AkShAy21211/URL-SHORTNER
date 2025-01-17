@@ -63,7 +63,7 @@ export const redirectUrl = async (req, res) => {
 
   // Extract data
   const userAgent = req.headers["user-agent"];
-  const ipAddress = "103.175.136.150";
+  const ipAddress = SECREATS.IP_ADDRESS;
   const geolocation = geoipLite.geoLocation(ipAddress);
   const osName = geoipLite.getOSFromUserAgent(userAgent);
   const deviceName = geoipLite.getDeviceFromUserAgent(userAgent);

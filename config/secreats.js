@@ -8,7 +8,8 @@ const SECREATS = {
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_URL: process.env.REDIS_URL,
   MONGO_URL: process.env.MONGO_URL,
-  BASE_URL: process.env.BASE_URL
+  BASE_URL: process.env.BASE_URL,
+  IP_ADDRESS: process.env.IP_ADDRESS,
 };
 
 export default SECREATS;

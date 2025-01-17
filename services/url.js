@@ -71,27 +71,16 @@ export const updateAnalyticsBreakdown = async (trackingData) => {
         );
         if (existingOSIndex > -1) {
           osType[existingOSIndex].uniqueClicks++;
-        } else {
-          osType.push({
-            osName: trackingData.osName,
-            uniqueClicks: 1,
-            uniqueUsers: 1,
-          });
-        }
+        } 
 
         // Handle device type tracking
         const existingDeviceIndex = deviceType.findIndex(
-          (device) => device.deviceName === trackingData.deviceName && !isUserExists
+          (device) =>
+            device.deviceName === trackingData.deviceName && !isUserExists
         );
         if (existingDeviceIndex > -1) {
           deviceType[existingDeviceIndex].uniqueClicks++;
-        } else {
-          deviceType.push({
-            deviceName: trackingData.deviceName,
-            uniqueClicks: 1,
-            uniqueUsers: 1,
-          });
-        }
+        } 
 
         updateAnalytics.clickByDate = clickByDate;
         updateAnalytics.osType = osType;
@@ -148,5 +137,25 @@ export const updateAnalyticsBreakdown = async (trackingData) => {
     }
   } catch (error) {
     logger.error("Error updating analytics breakdown", error);
+  }
+};
+
+export const findUrlAnalytics = async (urlId) => {
+  try {
+    const url = await AnalyticsModel.findOne(
+      { urlId },
+      {
+        _id:0,
+        totalClicks: 1,
+        uniqueUsers: 1,
+        clickByDate: 1,
+        osType: 1,
+        deviceType: 1,
+      }
+    ).exec();
+
+    return url;
+  } catch (error) {
+    logger.error("Error finding URL analytics by alias", error);
   }
 };

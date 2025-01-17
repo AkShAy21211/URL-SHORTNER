@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/shorten", rateLimiter, authenticate, url.shortenUrl);
 router.get("/:alias", rateLimiter, authenticate, url.redirectUrl);
-
+router.get("/analytics/:alias",rateLimiter, authenticate, url.getUrlAnalytics)
 export default router;
 

@@ -88,3 +88,25 @@ export const redirectUrl = async (req, res) => {
 
   res.redirect(urlData.longUrl);
 };
+
+export const getUrlAnalytics = async (req, res) => {
+  const { alias } = req.params;
+
+  const urlData = await url.findUrlByCustomAlias(alias);
+
+  if (!urlData) {
+    return res.status(responseMessages.error.URL_NOT_FOUND.statusCode).json({
+      message: responseMessages.error.URL_NOT_FOUND.message,
+    });
+  }
+
+  const analytics = await url.findUrlAnalytics(urlData._id);
+
+  if (!analytics) {
+    return res
+      .status(responseMessages.error.ANALYTICS_NOT_FOUND.statusCode)
+      .json({ message: responseMessages.error.ANALYTICS_NOT_FOUND.message });
+  }
+
+  return res.json(analytics);
+};

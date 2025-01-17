@@ -66,6 +66,12 @@ const responseMessages = {
       message: "Failed to shorten URL",
       statusCode: 500,
     },
+
+    ANALYTICS_NOT_FOUND:{
+      message: "No analytics found for the given URL",
+      statusCode: 404,
+    },
+   
   },
 };
 

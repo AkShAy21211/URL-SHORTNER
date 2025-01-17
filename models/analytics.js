@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model, mongoose } from "mongoose";
 
 const AnalyticsSchema = new Schema({
   urlId: { type: mongoose.Types.ObjectId, ref: "Url", required: true },
@@ -32,3 +32,7 @@ const AnalyticsSchema = new Schema({
     },
   ],
 });
+
+const AnalyticsModel = model("Analytics", AnalyticsSchema);
+
+export default AnalyticsModel;

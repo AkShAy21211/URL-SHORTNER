@@ -8,6 +8,7 @@ const router = express.Router();
 // URL Shortening Route
 
 router.post("/shorten", rateLimiter, authenticate, url.shortenUrl);
+router.get("/:alias", rateLimiter, authenticate, url.redirectUrl);
 
 export default router;
 

@@ -2,7 +2,7 @@ import { Schema, model, mongoose } from "mongoose";
 
 const AnalyticsSchema = new Schema({
   urlId: { type: mongoose.Types.ObjectId, ref: "Url", required: true },
-  userId: { type: mongoose.Types.ObjectId, ref: "User", required: false },
+  userId: [{ type: mongoose.Types.ObjectId, ref: "User", required: true }],
   totalClicks: {
     type: Number,
     default: 0,

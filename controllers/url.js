@@ -1,7 +1,8 @@
 import { url } from "../services/index.js";
-import { createUniqueId } from "../utils/index.js";
-import { responseMessages } from "../config/index.js";
+import { createUniqueId, geoipLite } from "../utils/index.js";
+import { logger, responseMessages } from "../config/index.js";
 import { SECREATS } from "../config/index.js";
+import requestIp from "request-ip";
 
 export const shortenUrl = async (req, res) => {
   const { longUrl } = req.body;
@@ -47,4 +48,43 @@ export const shortenUrl = async (req, res) => {
   return res.status(responseMessages.error.URL_SHORTEN_FAILED.statusCode).json({
     message: responseMessages.error.URL_SHORTEN_FAILED.message,
   });
+};
+
+export const redirectUrl = async (req, res) => {
+  const { alias } = req.params;
+
+  const urlData = await url.findUrlByCustomAlias(alias);
+
+  if (!urlData) {
+    return res.status(responseMessages.error.URL_NOT_FOUND.statusCode).json({
+      message: responseMessages.error.URL_NOT_FOUND.message,
+    });
+  }
+
+  // Extract data
+  const userAgent = req.headers["user-agent"];
+  const ipAddress = "103.175.136.150";
+  const geolocation = geoipLite.geoLocation(ipAddress);
+  const osName = geoipLite.getOSFromUserAgent(userAgent);
+  const deviceName = geoipLite.getDeviceFromUserAgent(userAgent);
+
+  // Update click details
+  await url.createRedirectLogs({
+    urlId: urlData._id,
+    ipAddress,
+    userAgent,
+    osName,
+    deviceName,
+    geolocation: geolocation,
+    userId: urlData.userId,
+  });
+
+  await url.updateAnalyticsBreakdown({
+    urlId: urlData._id,
+    osName,
+    deviceName,
+    userId: urlData.userId,
+  });
+
+  res.redirect(urlData.longUrl);
 };

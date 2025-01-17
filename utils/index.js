@@ -1,3 +1,4 @@
 import * as jwt from "./token.js";
 import createUniqueId from "./url.js";
-export { jwt, createUniqueId };
+import * as geoipLite from "./geoipLite.js";
+export { jwt, createUniqueId, geoipLite };

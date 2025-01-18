@@ -65,7 +65,7 @@ The **Custom URL Shortener API** is a scalable and feature-rich service designed
 - **Overall Analytics**
   - `GET https://url-shortner-production-d98e.up.railway.app/api/url/analytics/overall`
 
-Refer to the [API Documentation](#api-documentation) for detailed request and response formats.
+Refer to the [API Documentation](https://documenter.getpostman.com/view/29537965/2sAYQamBKk) for detailed request and response formats.
 
 ---
 

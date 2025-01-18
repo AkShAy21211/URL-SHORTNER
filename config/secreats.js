@@ -11,6 +11,11 @@ const SECREATS = {
   BASE_URL: process.env.BASE_URL,
   IP_ADDRESS: process.env.IP_ADDRESS,
   REDIS_URL: process.env.REDIS_URL,
+  REDIS_USERNAME: process.env.REDIS_USERNAME,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_HOST: process.env.REDIS_HOST
+ 
 };
 
 export default SECREATS;

@@ -1,6 +1,6 @@
 import { UrlModel, TrackingModel, AnalyticsModel } from "../models/index.js";
 import { logger } from "../config/index.js";
-import mongoose, { Types } from "mongoose";
+import  { Types } from "mongoose";
 
 export const findUrlByOriginalUrl = async (longUrl) => {
   try {

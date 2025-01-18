@@ -87,7 +87,7 @@ export const redirectUrl = async (req, res) => {
   }
   const urlData = await url.findUrlByCustomAlias(alias);
 
-  await client.setex(key, 60, JSON.stringify(urlData));
+  await client.setEx(key, 60, JSON.stringify(urlData));
 
   if (!urlData) {
     return res.status(responseMessages.error.URL_NOT_FOUND.statusCode).json({
@@ -97,7 +97,7 @@ export const redirectUrl = async (req, res) => {
 
   // Extract data
   const userAgent = req.headers["user-agent"];
-  const ipAddress = SECREATS.IP_ADDRESS||req.ip;
+  const ipAddress = SECREATS.IP_ADDRESS || req.ip;
   const geolocation = geoipLite.geoLocation(ipAddress);
   const osName = geoipLite.getOSFromUserAgent(userAgent);
   const deviceName = geoipLite.getDeviceFromUserAgent(userAgent);
@@ -141,7 +141,7 @@ export const getUrlAnalytics = async (req, res) => {
       .status(responseMessages.error.ANALYTICS_NOT_FOUND.statusCode)
       .json({ message: responseMessages.error.ANALYTICS_NOT_FOUND.message });
   }
-  await client.setex(key, 60, JSON.stringify(analytics));
+  await client.setEx(key, 60, JSON.stringify(analytics));
 
   return res.json(analytics);
 };
@@ -164,7 +164,7 @@ export const getUrlAnalyticsByTopic = async (req, res) => {
       .status(responseMessages.error.ANALYTICS_NOT_FOUND.statusCode)
       .json({ message: responseMessages.error.ANALYTICS_NOT_FOUND.message });
   }
-  await client.setex(key, 60, JSON.stringify(analytics));
+  await client.setEx(key, 60, JSON.stringify(analytics));
 
   return res.json(analytics);
 };
@@ -243,7 +243,7 @@ export const getOverallAnalyticsOfUrlsByUser = async (req, res) => {
     ),
   };
 
-  await client.setex(key, 60, JSON.stringify(analyticsData));
+  await client.setEx(key, 60, JSON.stringify(analyticsData));
 
   return res.json(analyticsData);
 };

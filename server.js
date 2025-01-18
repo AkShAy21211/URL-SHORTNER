@@ -8,7 +8,7 @@ import { authRoute, urlRoute } from "./routes/index.js";
 import "./config/db.js";
 import "./config/passport.js";
 import session from "express-session";
-import { SECREATS } from "./config/index.js";
+import { SECREATS, logger } from "./config/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,11 +39,11 @@ app.use((req, res, next) => {
 // Error Handler
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  console.error(err);
+  logger.error(err);
   res.json({ message: err.message });
 });
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });
